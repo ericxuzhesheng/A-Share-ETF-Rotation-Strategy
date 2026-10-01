@@ -16,9 +16,10 @@ from src.config import (
     NOTIFY_AFTER_WEEKLY_SIGNAL,
     SERVERCHAN_SENDKEY,
     WEEKLY_SIGNAL_RUN_HOUR,
+    OUTPUT_DIR,
 )
 from src.data_loader import is_last_trading_day_of_week
-from src.pipeline import main as run_pipeline
+from src.refresh_results import refresh_results as run_pipeline
 
 
 def should_run_weekly_signal(now: datetime.datetime, target_date: str | None = None) -> bool:
@@ -79,7 +80,7 @@ def get_markdown_lines(latest_date_str: str) -> list[str]:
     targets_file = OUTPUT_DIR / "top10_scored_targets_test.csv"
 
     md_lines = [
-        f"### 📅 调仓信号执行日期: {latest_date_str}",
+        f"### 📅 调仓信号日期: {latest_date_str}",
         "",
         "调仓信号触发逻辑已升级为：每周最后一个 A 股交易日 17:00 后自动运行（已自动规避节假日带来的非周五调仓问题）。",
         "",
@@ -126,9 +127,9 @@ def main():
         print("[INFO] Force run flag detected. Bypassing calendar and time checks.")
 
     # 1. Execute the strategy pipeline
-    # The pipeline writes artifacts to ETF_Result directory, and returns the top targets and equity curves.
+    # Refresh the saved parameters without retuning; historical dates also bound the data.
     try:
-        results = run_pipeline()
+        results = run_pipeline(as_of=args.date or now.strftime("%Y-%m-%d"), output_dir=OUTPUT_DIR)
     except Exception as exc:
         print(f"[ERROR] Pipeline execution failed: {exc}")
         sys.exit(1)
@@ -136,8 +137,9 @@ def main():
     # 2. Notification Phase
     if NOTIFY_AFTER_WEEKLY_SIGNAL:
         print("\n[INFO] Preparing notification message...")
-        latest_date_str = args.date if args.date else now.strftime("%Y-%m-%d")
+        latest_date_str = results["data_cutoff"]
         md_lines = get_markdown_lines(latest_date_str)
+        md_lines.insert(1, f"计划执行交易日: {results['next_execution_date']}（尚未执行）")
         markdown_message = "\n".join(md_lines)
         print("\n======== MESSAGE PREVIEW ========")
         print(markdown_message)

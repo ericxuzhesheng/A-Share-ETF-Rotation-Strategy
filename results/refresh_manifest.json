@@ -1,0 +1,202 @@
+{
+  "requested_as_of": "2026-10-02",
+  "data_cutoff": "2026-09-30",
+  "next_execution_date": "2026-10-08",
+  "parameter_source": "results/best_parameters.csv",
+  "parameters_retuned": false,
+  "universe_count": 37,
+  "benchmark": "510300.SH",
+  "data_loader": "Tushare fund_daily with existing AkShare fallback and split repair",
+  "asset_coverage": {
+    "159755.SZ": {
+      "first_date": "2021-06-24",
+      "last_date": "2026-09-30",
+      "rows": 1280
+    },
+    "515030.SH": {
+      "first_date": "2020-03-04",
+      "last_date": "2026-09-30",
+      "rows": 1598
+    },
+    "512480.SH": {
+      "first_date": "2019-06-12",
+      "last_date": "2026-09-30",
+      "rows": 1774
+    },
+    "159227.SZ": {
+      "first_date": "2025-05-16",
+      "last_date": "2026-09-30",
+      "rows": 338
+    },
+    "159326.SZ": {
+      "first_date": "2024-09-09",
+      "last_date": "2026-09-30",
+      "rows": 499
+    },
+    "159869.SZ": {
+      "first_date": "2021-03-05",
+      "last_date": "2026-09-30",
+      "rows": 1354
+    },
+    "512200.SH": {
+      "first_date": "2017-09-25",
+      "last_date": "2026-09-30",
+      "rows": 2188
+    },
+    "512800.SH": {
+      "first_date": "2017-08-03",
+      "last_date": "2026-09-30",
+      "rows": 2225
+    },
+    "159857.SZ": {
+      "first_date": "2021-02-24",
+      "last_date": "2026-09-30",
+      "rows": 1361
+    },
+    "562500.SH": {
+      "first_date": "2021-12-29",
+      "last_date": "2026-09-30",
+      "rows": 1153
+    },
+    "561120.SH": {
+      "first_date": "2022-02-15",
+      "last_date": "2026-09-30",
+      "rows": 1125
+    },
+    "515080.SH": {
+      "first_date": "2019-12-27",
+      "last_date": "2026-09-30",
+      "rows": 1639
+    },
+    "516750.SH": {
+      "first_date": "2021-11-05",
+      "last_date": "2026-09-30",
+      "rows": 1191
+    },
+    "159851.SZ": {
+      "first_date": "2021-03-19",
+      "last_date": "2026-09-30",
+      "rows": 1344
+    },
+    "159992.SZ": {
+      "first_date": "2020-04-10",
+      "last_date": "2026-09-30",
+      "rows": 1572
+    },
+    "515980.SH": {
+      "first_date": "2020-02-10",
+      "last_date": "2026-09-30",
+      "rows": 1615
+    },
+    "515230.SH": {
+      "first_date": "2021-03-02",
+      "last_date": "2026-09-30",
+      "rows": 1357
+    },
+    "515880.SH": {
+      "first_date": "2019-09-06",
+      "last_date": "2026-09-30",
+      "rows": 1713
+    },
+    "159779.SZ": {
+      "first_date": "2021-11-26",
+      "last_date": "2026-09-30",
+      "rows": 1176
+    },
+    "563230.SH": {
+      "first_date": "2025-09-17",
+      "last_date": "2026-09-30",
+      "rows": 251
+    },
+    "159713.SZ": {
+      "first_date": "2021-08-16",
+      "last_date": "2026-09-30",
+      "rows": 1243
+    },
+    "159870.SZ": {
+      "first_date": "2021-03-03",
+      "last_date": "2026-09-30",
+      "rows": 1356
+    },
+    "561760.SH": {
+      "first_date": "2024-04-29",
+      "last_date": "2026-09-30",
+      "rows": 590
+    },
+    "159980.SZ": {
+      "first_date": "2019-12-24",
+      "last_date": "2026-09-30",
+      "rows": 1642
+    },
+    "159890.SZ": {
+      "first_date": "2021-04-02",
+      "last_date": "2026-09-30",
+      "rows": 1334
+    },
+    "159841.SZ": {
+      "first_date": "2021-02-09",
+      "last_date": "2026-09-30",
+      "rows": 1367
+    },
+    "512690.SH": {
+      "first_date": "2019-05-06",
+      "last_date": "2026-09-30",
+      "rows": 1800
+    },
+    "159867.SZ": {
+      "first_date": "2021-03-05",
+      "last_date": "2026-09-30",
+      "rows": 1354
+    },
+    "515210.SH": {
+      "first_date": "2020-03-02",
+      "last_date": "2026-09-30",
+      "rows": 1600
+    },
+    "515220.SH": {
+      "first_date": "2020-03-02",
+      "last_date": "2026-09-30",
+      "rows": 1600
+    },
+    "512880.SH": {
+      "first_date": "2016-08-08",
+      "last_date": "2026-09-30",
+      "rows": 2465
+    },
+    "159855.SZ": {
+      "first_date": "2021-02-26",
+      "last_date": "2026-09-30",
+      "rows": 1359
+    },
+    "561360.SH": {
+      "first_date": "2023-10-31",
+      "last_date": "2026-09-30",
+      "rows": 710
+    },
+    "159985.SZ": {
+      "first_date": "2019-12-05",
+      "last_date": "2026-09-30",
+      "rows": 1655
+    },
+    "159934.SZ": {
+      "first_date": "2013-12-16",
+      "last_date": "2026-09-30",
+      "rows": 3112
+    },
+    "159525.SZ": {
+      "first_date": "2024-05-20",
+      "last_date": "2026-09-30",
+      "rows": 578
+    },
+    "159952.SZ": {
+      "first_date": "2017-05-19",
+      "last_date": "2026-09-30",
+      "rows": 2275
+    },
+    "510300.SH": {
+      "first_date": "2012-05-28",
+      "last_date": "2026-09-30",
+      "rows": 3488
+    }
+  }
+}

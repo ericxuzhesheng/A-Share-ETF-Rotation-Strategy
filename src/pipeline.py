@@ -35,7 +35,7 @@ from .config import (
     TREND_ETF_POOL,
     TUSHARE_TOKEN,
 )
-from .data_loader import align_market_data, get_symbol_label, load_tushare_daily
+from .data_loader import align_market_data, get_next_trading_day, get_symbol_label, load_tushare_daily
 from .indicators import (
     build_benchmark_curve,
     build_category_shift_map,
@@ -87,6 +87,7 @@ def run_backtest_on_period(
     period_name: str,
     start_date: str,
     end_date: str,
+    output_dir: Path = OUTPUT_DIR,
 ):
     print(f"\n{'=' * 60}")
     print(f"Running Backtest on {period_name}")
@@ -163,10 +164,13 @@ def run_backtest_on_period(
             )
 
     if "Test Set" in str(period_name):
+        # Only label the future plan; the backtest must not execute beyond its data.
+        if latest_trade_plan and latest_trade_plan.get("execution_date") is None:
+            latest_trade_plan["execution_date"] = get_next_trading_day(latest_trade_plan["signal_date"])
         print_signal_summary(latest_trade_plan)
         print_weight_change_details(latest_trade_plan)
         print_next_trade_holdings_table(latest_trade_plan)
-        csv_path = export_next_trade_holdings_csv(latest_trade_plan, OUTPUT_DIR)
+        csv_path = export_next_trade_holdings_csv(latest_trade_plan, output_dir)
         if csv_path is not None:
             print(f"\n下一交易日持仓 CSV：{csv_path}")
     else:

@@ -30,3 +30,11 @@ jobs:
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
           SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
+
+      - name: Save refreshed market data and strategy results
+        if: ${{ success() && hashFiles('ETF_Result/refresh_manifest.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: etf-rotation-results
+          path: ETF_Result/
+          retention-days: 30

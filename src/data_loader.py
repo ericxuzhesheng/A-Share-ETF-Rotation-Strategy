@@ -211,20 +211,32 @@ def align_market_data(data_dict: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFr
     return aligned
 
 
+def load_trading_calendar() -> pd.Series:
+    """Return verified exchange sessions; never substitute business weekdays."""
+    calendar = _retry_fetch(
+        lambda: ak.tool_trade_date_hist_sina(),
+        source_name="AkShare Calendar", symbol="A-Share Calendar", max_attempts=3,
+    )
+    dates = pd.to_datetime(calendar["trade_date"]).sort_values().drop_duplicates().reset_index(drop=True)
+    if dates.empty or dates.isna().any():
+        raise ValueError("Trading calendar is empty or invalid")
+    return dates
+
+
+def get_next_trading_day(target_date: str | pd.Timestamp) -> pd.Timestamp:
+    """Resolve a planned execution session, including holiday gaps."""
+    target = pd.Timestamp(target_date).normalize()
+    dates = load_trading_calendar()
+    if not dates.iloc[0] <= target < dates.iloc[-1]:
+        raise ValueError("The next trading day is outside verified calendar coverage")
+    return dates[dates > target].iloc[0]
+
+
 def is_last_trading_day_of_week(target_date: str | pd.Timestamp) -> bool:
     """Check if `target_date` is the last A-share trading day of its ISO calendar week."""
     target_ts = pd.Timestamp(target_date).normalize()
     try:
-        # Load the public trading calendar from Sina via AkShare.
-        calendar_df = _retry_fetch(
-            lambda: ak.tool_trade_date_hist_sina(),
-            source_name="AkShare Calendar",
-            symbol="A-Share Calendar",
-            max_attempts=3,
-        )
-
-        # Parse and sort the dates
-        trade_dates = pd.to_datetime(calendar_df["trade_date"]).sort_values().reset_index(drop=True)
+        trade_dates = load_trading_calendar()
         if (trade_dates.empty or trade_dates.isna().any()
                 or not trade_dates.iloc[0] <= target_ts <= trade_dates.iloc[-1]):
             raise ValueError("Target date is outside the verified trading calendar coverage")

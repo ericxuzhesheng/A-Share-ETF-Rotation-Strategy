@@ -158,7 +158,7 @@ DEFENSIVE_TRIGGER_DD_RANGE = [-0.08, -0.10, -0.12]
 TREND_ETF_POOL: Dict[str, str] = {
     # Stock / sector ETFs
     "电池ETF广发": "159755.SZ", "新能源车ETF华夏": "515030.SH", "半导体ETF国联安": "512480.SH", "航空航天ETF华夏": "159227.SZ",
-    "电网设备ETF华夏": "159326.SZ", "游戏ETF华夏": "159869.SZ", "房地产ETF": "512200.SZ", "银行ETF华宝": "512800.SH",
+    "电网设备ETF华夏": "159326.SZ", "游戏ETF华夏": "159869.SZ", "房地产ETF": "512200.SH", "银行ETF华宝": "512800.SH",
     "光伏ETF": "159857.SZ", "机器人ETF华夏": "562500.SH", "家电ETF富国": "561120.SH", "中证红利ETF招商": "515080.SH",
     "建材ETF富国": "516750.SH", "金融科技ETF华宝": "159851.SZ", "创新药ETF": "159992.SZ", "人工智能ETF": "515980.SH",
     "软件ETF国泰": "515230.SH", "通信ETF国泰": "515880.SH", "消费电子ETF": "159779.SZ", "卫星ETF富国": "563230.SH",
@@ -180,7 +180,7 @@ SYMBOL_NAME_MAP[BENCHMARK_CODE] = BENCHMARK_NAME
 # ---------------------------------------------------------------------------
 ASSET_CATEGORY_MAP: Dict[str, str] = {
     "159755.SZ": "stock", "515030.SH": "stock", "512480.SH": "stock", "159227.SZ": "stock", "159326.SZ": "stock",
-    "159869.SZ": "stock", "512200.SZ": "stock", "512800.SH": "dividend", "159857.SZ": "stock", "562500.SH": "stock",
+    "159869.SZ": "stock", "512200.SH": "stock", "512800.SH": "dividend", "159857.SZ": "stock", "562500.SH": "stock",
     "561120.SH": "stock", "515080.SH": "dividend", "516750.SH": "stock", "159851.SZ": "stock", "159992.SZ": "stock",
     "515980.SH": "stock", "515230.SH": "stock", "515880.SH": "stock", "159779.SZ": "stock", "563230.SH": "stock",
     "159713.SZ": "stock", "159870.SZ": "stock", "561760.SH": "stock", "159980.SZ": "stock", "159890.SZ": "stock",

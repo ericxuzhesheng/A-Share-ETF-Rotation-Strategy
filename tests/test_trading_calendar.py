@@ -35,3 +35,16 @@ def test_calendar_outage_does_not_run_on_a_holiday_friday(monkeypatch):
 def test_unknown_calendar_coverage_does_not_guess(day):
     with pytest.raises(RuntimeError, match="Cannot verify the weekly trading calendar"):
         data_loader.is_last_trading_day_of_week(day)
+
+
+@pytest.mark.parametrize("day, expected", [
+    ("2026-09-24", "2026-09-28"), ("2026-09-30", "2026-10-08"),
+    ("2026-10-01", "2026-10-08"), ("2026-10-09", "2026-10-12"),
+])
+def test_next_execution_skips_exchange_holidays(day, expected):
+    assert data_loader.get_next_trading_day(day) == pd.Timestamp(expected)
+
+
+def test_next_execution_fails_without_future_calendar():
+    with pytest.raises(ValueError, match="coverage"):
+        data_loader.get_next_trading_day("2026-10-12")

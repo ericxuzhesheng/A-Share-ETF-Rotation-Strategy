@@ -23,7 +23,7 @@
 
 ![Strategy NAV vs Benchmark · Excess NAV · Drawdown (OOS 2020-2026)](figures/train_test_comparison.png)
 
-> **样本外亮点（OOS: 2020–2026）**：Sharpe **1.48** · 年化 **35.25%** · 最大回撤 **-12.91%** · Calmar **2.73**。
+> **最新样本外结果（2020-01-02 至 2026-09-30）**：Sharpe **0.4726** · 年化 **8.65%** · 最大回撤 **-36.26%** · Calmar **0.24**。沿用已保存参数，使用已修正交易时序的引擎，未重新调参。
 
 ### 1. 项目概览
 
@@ -60,7 +60,7 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 #### 2.2 资金管理与执行
 
 - **买入候选池**：包含“硬候选（趋势和强度全满足）”和“软候选（硬候选不足时的降级补位）”；
-- **执行频率**：周五收盘后更新信号，**周一开盘价（加滑点）执行买入/卖出**；
+- **执行频率**：每周最后一个交易日收盘后更新信号，**下一交易日开盘价（加滑点）执行买入/卖出**；
 - **仓位映射**：并非无脑满仓。候选标的数（0-5只）将映射至组合的总暴露度（如 `base / balanced / aggressive` 三档）；
 - **回撤收敛网**：当策略净值较前高回撤触及 `dd_limit`（如 -24%、-28% 等）时，强制将最大暴露度压平至 `dd_cap`；
 - **防守切换**：回撤达到 `defensive_trigger_dd` 后，容许将剩余额度投向债券 ETF 或现金池；
@@ -76,20 +76,20 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 > - **样本外 OOS（2020–2026）**：年化 **35.26% → 12.17%**，Sharpe **1.48 → 0.62**，最大回撤 **-12.91% → -32.56%**
 > - **换手率**：训练集 **72.25 → 89.44**，OOS **261.02 → 301.35**
 >
-> 对比明细已保存至 `results/timing_fix_compare/timing_fix_metrics.json`。下文表格中的亮眼表现反映的是**修正前的历史快照**；在完成时序审计后，应以 `timing_fix_compare` 中的修正后结果作为新的基线继续优化调仓方案。
+> 上述数值是 2026 年 4 月时序审计的历史对照，保留于 `results/timing_fix_compare/timing_fix_metrics.json`。下表已替换为当前代码与截至 2026-09-30 行情重新计算的结果，两者数据窗不同。
 
-在严格限定参数验证集最大回撤 `≤ 12%` 的前提下，样本外表现如下：
+本次覆盖 37 只策略 ETF 和沪深 300 ETF 基准，全部行情截至 2026-09-30。训练窗配置为 2009–2019，实际可用策略数据始于 2013-12-16；验证期约束不代表样本外回撤保证。9 月 30 日信号的下一执行交易日为 **2026-10-08**，该计划尚未执行。
 
 | 核心指标 | 训练集（2009–2019） | 样本外 OOS（2020–2026） | 沪深300（2020–2026） |
 | --- | ---: | ---: | ---: |
-| **年化收益** | 4.83% | **35.25%** | -0.8% |
-| **Sharpe 比率** | 0.5423 | **1.4787** | - |
-| **最大回撤** | -10.35% | **-12.91%** | ~ -45% |
-| **Calmar 比率** | 0.47 | **2.73** | - |
-| **胜率** | 44.60% | 45.67% | - |
-| **平均持仓天数** | 12.8 | 12.4 | - |
+| **年化收益** | 2.25% | **8.65%** | 1.02% |
+| **Sharpe 比率** | 0.2717 | **0.4726** | - |
+| **最大回撤** | -21.48% | **-36.26%** | -45.10% |
+| **Calmar 比率** | 0.10 | **0.24** | - |
+| **胜率** | 38.38% | 39.67% | - |
+| **平均持仓天数** | 16.1 | 13.3 | - |
 
-*(注：扣除了单边 0.03% 手续费与单边 0.05% 滑点。完整指标表与交易流水见 `results/` 目录。)*
+*(沿用现有成本配置：单边手续费 0.03%、单边滑点 0.05%，及代码中额外的卖出费用 0.1%。本次未重估成本模型。完整行情快照、指标和流水见 `results/`。)*
 
 ### 4. 仓库结构
 
@@ -139,7 +139,13 @@ $env:TUSHARE_TOKEN="your_tushare_pro_token"
 python -m src.pipeline
 ```
 
-*(如未设置该变量，回测管道将完全降级并尝试通过 AkShare 爬取，但请求速度和稳定性受限。)*
+*(必须设置 Tushare Token；AkShare 只用于已配置 Token 后的行情请求失败回退。)*
+
+沿用已保存参数刷新到最近交易日（不进行参数搜索）：
+```bash
+python -m src.refresh_results --as-of 2026-10-02
+```
+输出写入 `results/`；`--from-snapshot` 可复用该目录的行情快照。`python -m src.pipeline` 仍用于完整参数搜索，输出至 `ETF_Result/`。
 
 #### 6.3 探索 Jupyter Notebook
 
@@ -154,7 +160,9 @@ jupyter notebook strategy/etf_sector_rotation_strategy.ipynb
 
 GitHub 工作流使用 `Asia/Shanghai` 时区。节假日和周末跳过；日历获取失败、日期超出日历范围或无法确定下一交易日时会报错，不回退到“周五即交易日”。长期无仓库活动可能导致 GitHub 暂停定时任务，需要在 Actions 页面重新启用。
 
-要验证当日是否应执行轮动并推送结果，请使用新增的入口脚本：
+每周任务沿用 `results/best_parameters.csv`，检查所有标的行情是否齐全，再刷新结果。GitHub Actions 将完整输出保存为 `etf-rotation-results` artifact（保留 30 天），可从运行页面下载。
+
+要验证当日是否应执行轮动并推送结果，请使用入口脚本：
 
 ```bash
 python scripts/send_weekly_signal.py
@@ -190,7 +198,7 @@ python scripts/send_weekly_signal.py --date 2026-04-30 --force-run
 
 - 早期 ETF 标的稀疏：部分热门细分行业（如电池、机器人）在 2020 年前未上市，导致训练集后半段才真正进入“板块大轮动”时代；
 - 冲击成本简化：交易滑点设为固定万五，未建立基于日内流动性的价格冲击模型；
-- 开盘模拟误差：周一开盘价成交无法精准反映极端跌停情况（如千股跌停无法卖出时的滞后损失）。
+- 开盘模拟误差：下一交易日开盘价成交无法精准反映极端跌停情况（如千股跌停无法卖出时的滞后损失）。
 
 ### 9. 后续优化方向
 
@@ -247,7 +255,7 @@ Current language: English | [切换到中文](#zh)
 
 ![Strategy NAV vs Benchmark · Excess NAV · Drawdown (OOS 2020-2026)](figures/train_test_comparison.png)
 
-> **OOS Highlights (2020–2026)**: Sharpe **1.48** · Annualized **35.25%** · Max Drawdown **-12.91%** · Calmar **2.73**.
+> **Current OOS results (2020-01-02 through 2026-09-30)**: Sharpe **0.4726** · Annualized **8.65%** · Max Drawdown **-36.26%** · Calmar **0.24**. Saved parameters, corrected execution timing, no retuning.
 
 ### 1. Overview
 
@@ -284,7 +292,7 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 #### 2.2 Portfolio Construction & Execution
 
 - **Candidate Pool**: "Hard candidates" (meeting all trend/strength criteria) and "Soft candidates" (fallback options when hard candidates are scarce).
-- **Execution Frequency**: Signals update after Friday's close; **execution occurs on Monday's open (with slippage)**.
+- **Execution Frequency**: Signals update after the last exchange session of each week; **execution occurs at the next exchange session's open (with slippage)**.
 - **Exposure Mapping**: The portfolio isn't always 100% invested. The number of eligible candidates (0 to 5) maps to specific total portfolio exposure limits (`base / balanced / aggressive` tiers).
 - **Drawdown Contraction Grid**: When the live drawdown from the peak hits `dd_limit` (e.g., -24%, -28%), the maximum portfolio exposure is aggressively capped at `dd_cap`.
 - **Defensive Switch**: If the drawdown exceeds `defensive_trigger_dd`, a portion of the portfolio is allowed to rotate into bond ETFs or cash.
@@ -292,18 +300,18 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 
 ### 3. Backtest Results
 
-With a strict constraint limiting validation-set maximum drawdown to `≤ 12%`, the out-of-sample performance is as follows:
+The refresh covers all 37 strategy ETFs and the CSI 300 ETF benchmark through 2026-09-30. The configured training window is 2009–2019; available strategy data begins on 2013-12-16. Validation constraints do not guarantee OOS drawdowns. The September 30 signal is planned for **2026-10-08**, outside the backtest. These results supersede the pre-timing-fix headline figures; April audit comparisons remain archived under `results/timing_fix_compare/`.
 
 | Metric | Training (2009–2019) | OOS (2020–2026) | Benchmark CSI 300 (2020-2026) |
 | --- | ---: | ---: | ---: |
-| **Annual Return** | 4.83% | **35.25%** | -0.8% |
-| **Sharpe Ratio** | 0.5423 | **1.4787** | - |
-| **Max Drawdown** | -10.35% | **-12.91%** | ~ -45% |
-| **Calmar Ratio** | 0.47 | **2.73** | - |
-| **Win Rate** | 44.60% | 45.67% | - |
-| **Avg Hold Days** | 12.8 | 12.4 | - |
+| **Annual Return** | 2.25% | **8.65%** | 1.02% |
+| **Sharpe Ratio** | 0.2717 | **0.4726** | - |
+| **Max Drawdown** | -21.48% | **-36.26%** | -45.10% |
+| **Calmar Ratio** | 0.10 | **0.24** | - |
+| **Win Rate** | 38.38% | 39.67% | - |
+| **Avg Hold Days** | 16.1 | 13.3 | - |
 
-*(Note: Results are net of 0.03% one-way commission and 0.05% one-way slippage. See `results/` for full trade logs and metric CSVs.)*
+*(Existing cost assumptions are preserved: 0.03% one-way commission, 0.05% one-way slippage and the engine's additional 0.1% sell charge. This refresh does not recalibrate costs. Market snapshots, metrics and trade logs are in `results/`.)*
 
 ### 4. Repository Structure
 
@@ -353,7 +361,13 @@ $env:TUSHARE_TOKEN="your_tushare_pro_token"
 python -m src.pipeline
 ```
 
-*(Without the token, the pipeline will degrade and attempt to scrape via AkShare, which is significantly slower and less stable.)*
+*(A Tushare token is required; AkShare is only a fallback after a configured Tushare request fails.)*
+
+Refresh through the latest exchange session with saved parameters, without a new search:
+```bash
+python -m src.refresh_results --as-of 2026-10-02
+```
+Outputs go to `results/`; add `--from-snapshot` to reuse its saved market data. `python -m src.pipeline` remains the full parameter-search entry point and writes to `ETF_Result/`.
 
 #### 6.3 Explore via Jupyter Notebook
 
@@ -368,7 +382,9 @@ The signal trigger logic has been upgraded: **it now automatically runs after 17
 
 The GitHub workflow uses the `Asia/Shanghai` time zone. Holidays and weekends are skipped; unavailable calendars, dates outside calendar coverage and unknown next trading days fail visibly instead of guessing from the weekday. GitHub may suspend scheduled workflows after prolonged repository inactivity; re-enable them on the Actions page when needed.
 
-To verify whether a rotation should execute today and push the results, use the new entry script:
+Weekly runs reuse `results/best_parameters.csv`, require current data for every symbol and upload outputs as the `etf-rotation-results` Actions artifact (30-day retention).
+
+To verify whether a rotation should execute today and push the results, use the entry script:
 
 ```bash
 python scripts/send_weekly_signal.py
@@ -404,7 +420,7 @@ Once configured, GitHub will automatically check daily at 17:00 Beijing Time. Wh
 
 - **Sparse Early Data**: Many popular niche sector ETFs (e.g., batteries, robotics) were not listed prior to 2020, making the early training set less representative of modern rotation dynamics.
 - **Simplified Impact Costs**: Trading slippage is fixed at 5 basis points. A granular model based on intraday liquidity and market impact is not yet implemented.
-- **Execution Price Accuracy**: Executing strictly at Monday's open fails to precisely capture the reality of extreme limit-down situations where liquidity dries up.
+- **Execution Price Accuracy**: Executing strictly at the next trading session's open fails to precisely capture the reality of extreme limit-down situations where liquidity dries up.
 
 ### 9. Future Optimizations
 

@@ -152,6 +152,8 @@ jupyter notebook strategy/etf_sector_rotation_strategy.ipynb
 
 调仓信号触发逻辑已升级为：**每周最后一个 A 股交易日 17:00 后自动运行（非固定周五）**。此举自动规避了由于法定节假日造成的非工作日错位。
 
+GitHub 工作流使用 `Asia/Shanghai` 时区。节假日和周末跳过；日历获取失败、日期超出日历范围或无法确定下一交易日时会报错，不回退到“周五即交易日”。长期无仓库活动可能导致 GitHub 暂停定时任务，需要在 Actions 页面重新启用。
+
 要验证当日是否应执行轮动并推送结果，请使用新增的入口脚本：
 
 ```bash
@@ -363,6 +365,8 @@ jupyter notebook strategy/etf_sector_rotation_strategy.ipynb
 #### 6.4 Automated Weekly Signal Push (WeChat Notification)
 
 The signal trigger logic has been upgraded: **it now automatically runs after 17:00 on the last A-share trading day of the week (no longer fixed to Friday)**. This smartly navigates holiday-shortened weeks without missing rotation windows.
+
+The GitHub workflow uses the `Asia/Shanghai` time zone. Holidays and weekends are skipped; unavailable calendars, dates outside calendar coverage and unknown next trading days fail visibly instead of guessing from the weekday. GitHub may suspend scheduled workflows after prolonged repository inactivity; re-enable them on the Actions page when needed.
 
 To verify whether a rotation should execute today and push the results, use the new entry script:
 

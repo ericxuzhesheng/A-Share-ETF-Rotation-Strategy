@@ -215,7 +215,7 @@ def is_last_trading_day_of_week(target_date: str | pd.Timestamp) -> bool:
     """Check if `target_date` is the last A-share trading day of its ISO calendar week."""
     target_ts = pd.Timestamp(target_date).normalize()
     try:
-        # Load the official trading calendar from Sina via AkShare
+        # Load the public trading calendar from Sina via AkShare.
         calendar_df = _retry_fetch(
             lambda: ak.tool_trade_date_hist_sina(),
             source_name="AkShare Calendar",
@@ -225,6 +225,9 @@ def is_last_trading_day_of_week(target_date: str | pd.Timestamp) -> bool:
 
         # Parse and sort the dates
         trade_dates = pd.to_datetime(calendar_df["trade_date"]).sort_values().reset_index(drop=True)
+        if (trade_dates.empty or trade_dates.isna().any()
+                or not trade_dates.iloc[0] <= target_ts <= trade_dates.iloc[-1]):
+            raise ValueError("Target date is outside the verified trading calendar coverage")
 
         # Check if the target is even a trading day
         if target_ts not in trade_dates.values:
@@ -233,8 +236,7 @@ def is_last_trading_day_of_week(target_date: str | pd.Timestamp) -> bool:
         # Find the next trading day
         idx = trade_dates[trade_dates == target_ts].index[0]
         if idx >= len(trade_dates) - 1:
-            # Reached the end of the known calendar, assume it's true to be safe
-            return True
+            raise ValueError("The next trading day is unknown; cannot verify the final session of the week")
 
         next_ts = trade_dates.iloc[idx + 1]
 
@@ -245,9 +247,9 @@ def is_last_trading_day_of_week(target_date: str | pd.Timestamp) -> bool:
         return (curr_iso.year, curr_iso.week) != (next_iso.year, next_iso.week)
 
     except Exception as exc:
-        print(f"  [WARN] Trading calendar lookup failed: {exc}. Falling back to Friday check.")
-        # Fallback if AkShare fails: assume Friday is the last day
-        return target_ts.weekday() == 4
+        raise RuntimeError(
+            f"Cannot verify the weekly trading calendar for {target_ts.date()}; refusing a weekday-only fallback."
+        ) from exc
 
 
 # duplicate legacy loader definitions removed

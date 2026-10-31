@@ -1,0 +1,10 @@
+{
+  "source": "https://github.com/ericxuzhesheng/A-Share-ETF-Rotation-Strategy/actions/runs/41080178659",
+  "artifact_id": 12988708339,
+  "data_cutoff": "2026-10-30",
+  "next_execution_date": "2026-11-02",
+  "symbols": 38,
+  "rows": 56927,
+  "metric_reconciliation": "passed",
+  "parameters_retuned": false
+}

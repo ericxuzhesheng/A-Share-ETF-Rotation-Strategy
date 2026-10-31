@@ -23,7 +23,7 @@
 
 ![Strategy NAV vs Benchmark · Excess NAV · Drawdown (OOS 2020-2026)](figures/train_test_comparison.png)
 
-> **最新样本外结果（2020-01-02 至 2026-09-30）**：Sharpe **0.4726** · 年化 **8.65%** · 最大回撤 **-36.26%** · Calmar **0.24**。沿用已保存参数，使用已修正交易时序的引擎，未重新调参。
+> **最新样本外结果（2020-01-02 至 2026-10-30）**：Sharpe **0.3571** · 年化 **5.74%** · 最大回撤 **-37.84%** · Calmar **0.15**。沿用已保存参数，使用已修正交易时序的引擎，未重新调参。
 
 ### 1. 项目概览
 
@@ -76,18 +76,18 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 > - **样本外 OOS（2020–2026）**：年化 **35.26% → 12.17%**，Sharpe **1.48 → 0.62**，最大回撤 **-12.91% → -32.56%**
 > - **换手率**：训练集 **72.25 → 89.44**，OOS **261.02 → 301.35**
 >
-> 上述数值是 2026 年 4 月时序审计的历史对照，保留于 `results/timing_fix_compare/timing_fix_metrics.json`。下表已替换为当前代码与截至 2026-09-30 行情重新计算的结果，两者数据窗不同。
+> 上述数值是 2026 年 4 月时序审计的历史对照，保留于 `results/timing_fix_compare/timing_fix_metrics.json`。下表已替换为当前代码与截至 2026-10-30 行情重新计算的结果，两者数据窗不同。
 
-本次覆盖 37 只策略 ETF 和沪深 300 ETF 基准，全部行情截至 2026-09-30。训练窗配置为 2009–2019，实际可用策略数据始于 2013-12-16；验证期约束不代表样本外回撤保证。9 月 30 日信号的下一执行交易日为 **2026-10-08**，该计划尚未执行。
+本次覆盖 37 只策略 ETF 和沪深 300 ETF 基准，全部行情截至 2026-10-30。训练窗配置为 2009–2019，实际可用策略数据始于 2013-12-16；验证期约束不代表样本外回撤保证。10 月 30 日信号的下一执行交易日为 **2026-11-02**，该计划尚未执行。
 
 | 核心指标 | 训练集（2009–2019） | 样本外 OOS（2020–2026） | 沪深300（2020–2026） |
 | --- | ---: | ---: | ---: |
-| **年化收益** | 2.25% | **8.65%** | 1.02% |
-| **Sharpe 比率** | 0.2717 | **0.4726** | - |
-| **最大回撤** | -21.48% | **-36.26%** | -45.10% |
-| **Calmar 比率** | 0.10 | **0.24** | - |
-| **胜率** | 38.38% | 39.67% | - |
-| **平均持仓天数** | 16.1 | 13.3 | - |
+| **年化收益** | 2.18% | **5.74%** | -0.31% |
+| **Sharpe 比率** | 0.2644 | **0.3571** | - |
+| **最大回撤** | -21.48% | **-37.84%** | -45.10% |
+| **Calmar 比率** | 0.10 | **0.15** | - |
+| **胜率** | 39.39% | 38.66% | - |
+| **平均持仓天数** | 16.2 | 13.2 | - |
 
 *(沿用现有成本配置：单边手续费 0.03%、单边滑点 0.05%，及代码中额外的卖出费用 0.1%。本次未重估成本模型。完整行情快照、指标和流水见 `results/`。)*
 
@@ -255,7 +255,7 @@ Current language: English | [切换到中文](#zh)
 
 ![Strategy NAV vs Benchmark · Excess NAV · Drawdown (OOS 2020-2026)](figures/train_test_comparison.png)
 
-> **Current OOS results (2020-01-02 through 2026-09-30)**: Sharpe **0.4726** · Annualized **8.65%** · Max Drawdown **-36.26%** · Calmar **0.24**. Saved parameters, corrected execution timing, no retuning.
+> **Current OOS results (2020-01-02 through 2026-10-30)**: Sharpe **0.3571** · Annualized **5.74%** · Max Drawdown **-37.84%** · Calmar **0.15**. Saved parameters, corrected execution timing, no retuning.
 
 ### 1. Overview
 
@@ -300,16 +300,16 @@ rotation_score = 0.4·LogBias + 0.2·LogBias_slope + 0.2·(ret_20 * 100) + 0.2·
 
 ### 3. Backtest Results
 
-The refresh covers all 37 strategy ETFs and the CSI 300 ETF benchmark through 2026-09-30. The configured training window is 2009–2019; available strategy data begins on 2013-12-16. Validation constraints do not guarantee OOS drawdowns. The September 30 signal is planned for **2026-10-08**, outside the backtest. These results supersede the pre-timing-fix headline figures; April audit comparisons remain archived under `results/timing_fix_compare/`.
+The refresh covers all 37 strategy ETFs and the CSI 300 ETF benchmark through 2026-10-30. The configured training window is 2009–2019; available strategy data begins on 2013-12-16. Validation constraints do not guarantee OOS drawdowns. The October 30 signal is planned for **2026-11-02**, outside the backtest. These results supersede the pre-timing-fix headline figures; April audit comparisons remain archived under `results/timing_fix_compare/`.
 
 | Metric | Training (2009–2019) | OOS (2020–2026) | Benchmark CSI 300 (2020-2026) |
 | --- | ---: | ---: | ---: |
-| **Annual Return** | 2.25% | **8.65%** | 1.02% |
-| **Sharpe Ratio** | 0.2717 | **0.4726** | - |
-| **Max Drawdown** | -21.48% | **-36.26%** | -45.10% |
-| **Calmar Ratio** | 0.10 | **0.24** | - |
-| **Win Rate** | 38.38% | 39.67% | - |
-| **Avg Hold Days** | 16.1 | 13.3 | - |
+| **Annual Return** | 2.18% | **5.74%** | -0.31% |
+| **Sharpe Ratio** | 0.2644 | **0.3571** | - |
+| **Max Drawdown** | -21.48% | **-37.84%** | -45.10% |
+| **Calmar Ratio** | 0.10 | **0.15** | - |
+| **Win Rate** | 39.39% | 38.66% | - |
+| **Avg Hold Days** | 16.2 | 13.2 | - |
 
 *(Existing cost assumptions are preserved: 0.03% one-way commission, 0.05% one-way slippage and the engine's additional 0.1% sell charge. This refresh does not recalibrate costs. Market snapshots, metrics and trade logs are in `results/`.)*
 

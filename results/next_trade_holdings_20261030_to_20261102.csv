@@ -1,0 +1,4 @@
+﻿symbol,name,current_weight,target_weight,delta_weight,action,trigger_type
+159525.SZ,红利低波ETF富国,0.0,0.326667,0.326667,调入，增加 32.67%,weekly_rebalance
+512800.SH,银行ETF华宝,0.0,0.326667,0.326667,调入，增加 32.67%,weekly_rebalance
+515080.SH,中证红利ETF招商,0.0,0.326667,0.326667,调入，增加 32.67%,weekly_rebalance

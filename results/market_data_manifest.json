@@ -1,0 +1,10 @@
+{
+  "checked_on": "2026-11-16",
+  "validation": "passed",
+  "data_cutoff": "2026-11-16",
+  "asset_count": 38,
+  "rows": 57345,
+  "source": "Tushare fund_daily with existing AkShare fallback and split repair",
+  "scope": "Market-data refresh only; published strategy outputs and parameters retained",
+  "retained_research_cutoff": "2026-10-30"
+}

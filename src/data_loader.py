@@ -214,7 +214,7 @@ def align_market_data(data_dict: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFr
 def load_trading_calendar() -> pd.Series:
     """Return verified exchange sessions; never substitute business weekdays."""
     calendar = _retry_fetch(
-        lambda: ak.tool_trade_date_hist_sina(),
+        lambda: ak.calendar_trade_date_hist_sina(),
         source_name="AkShare Calendar", symbol="A-Share Calendar", max_attempts=3,
     )
     dates = pd.to_datetime(calendar["trade_date"]).sort_values().drop_duplicates().reset_index(drop=True)

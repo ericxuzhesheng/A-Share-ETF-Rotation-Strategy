@@ -6,6 +6,11 @@ on:
     - cron: '0 9 * * *'
   # 允许在 GitHub Actions 页面手动点击触发
   workflow_dispatch:
+    inputs:
+      as_of:
+        description: 'Refresh results through YYYY-MM-DD without sending a notification; leave empty for the normal weekly signal'
+        required: false
+        type: string
 
 jobs:
   run:
@@ -26,8 +31,14 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run weekly signal script
-        run: PYTHONPATH=. python scripts/send_weekly_signal.py
+        run: |
+          if [ -n "$REFRESH_AS_OF" ]; then
+            PYTHONPATH=. python -m src.refresh_results --as-of "$REFRESH_AS_OF" --output-dir ETF_Result
+          else
+            PYTHONPATH=. python scripts/send_weekly_signal.py
+          fi
         env:
+          REFRESH_AS_OF: ${{ inputs.as_of }}
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
           SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
 

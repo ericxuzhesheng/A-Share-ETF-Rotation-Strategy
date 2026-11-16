@@ -9,7 +9,7 @@ from src import data_loader
 @pytest.fixture(autouse=True)
 def public_calendar(monkeypatch):
     monkeypatch.setattr(data_loader, "_retry_fetch", lambda fetcher, **kwargs: fetcher())
-    monkeypatch.setattr(data_loader.ak, "tool_trade_date_hist_sina", lambda: pd.DataFrame({
+    monkeypatch.setattr(data_loader.ak, "calendar_trade_date_hist_sina", lambda: pd.DataFrame({
         "trade_date": ["2026-09-23", "2026-09-24", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-08", "2026-10-09", "2026-10-12"],
     }))
 
@@ -26,7 +26,7 @@ def test_weekly_signal_respects_exchange_holidays(day, expected):
 def test_calendar_outage_does_not_run_on_a_holiday_friday(monkeypatch):
     def fail():
         raise OSError("calendar unavailable")
-    monkeypatch.setattr(data_loader.ak, "tool_trade_date_hist_sina", fail)
+    monkeypatch.setattr(data_loader.ak, "calendar_trade_date_hist_sina", fail)
     with pytest.raises(RuntimeError, match="Cannot verify the weekly trading calendar"):
         data_loader.is_last_trading_day_of_week("2026-09-25")
 
